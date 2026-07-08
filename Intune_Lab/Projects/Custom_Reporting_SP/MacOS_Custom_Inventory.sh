@@ -189,7 +189,7 @@ EOF
 #----------------------------
 # Detect Intune Device Name
 #----------------------------
-MANAGEDDEVICENAME=(Hostname)
+MANAGEDDEVICENAME=$(Hostname)
 #
 #----------------------------
 # Detect Intune Device ID
