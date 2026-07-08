@@ -12,8 +12,8 @@ Here is how I would do it.
 
 - **Secure Custom Inventory.pdf** — Step by step instructions for obtaining a test certificate, Service Principal, Data Collection Endpoint, Log Analytics Table and Data Collection Rule configuration.
 - **Get-Cert.ps1** — Powershell script to generate and export a self-signed certificate Public and Private keys.
-- **Custom_Inventory.ps1** — Windows Custom Compliance script using a Client Certificate to authenticate as a Service Principal.
+- **Windows_Custom_Inventory.ps1** — Windows Custom Compliance script using a Client Certificate to authenticate as a Service Principal.
+- **MacOS_Custom_Inventory.sh** — MacOS Custom Compliance script using a Client Certificate to authenticate as a Service Principal.
 - **Output.json** — Used to configure the Log Analytics table and DCR. Sample data submission in JSON format.
 - **Inventory.log** — Sample log output of Custom_Inventory.ps1
-
-
+- **Output.json** — Sample json for Log Analytics table and DCR creation.

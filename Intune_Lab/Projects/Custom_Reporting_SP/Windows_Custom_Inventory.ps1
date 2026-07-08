@@ -5,17 +5,17 @@
 Add-Type -AssemblyName System.Web
 #
 # Service Principal Data (Required for Token)
-$ApplicationID = "<Application/Client ID>"
-$TenantID = "<Tenant ID>"
-$CertName = "Data Collect"
+$ApplicationID = "<Application client id>"
+$TenantID = "<Your tenant id>"
+$CertName = "<Certificate subject match string>"
 #
 # Log Analytics Data (for JSON submission)
 $DcrImmutableId = "<DCR Immutable ID>"
-$DceURI = "<DCE Data Ingestion URL>"
-$streamName = "<Stream Name from DCR JSON>"
+$DceURI = "<DCE URI>"
+$streamName = "<Stream name>"
 #
 # Script logging
-$LogFile = "<Log File Path>"
+$LogFile = "<Full path to log file, or blank>"
 #
 # If a log file has been specified and it already exists, delete it.
 if (-not [string]::IsNullOrWhiteSpace($LogFile) -and (Test-Path -LiteralPath $LogFile)) {
@@ -24,6 +24,66 @@ if (-not [string]::IsNullOrWhiteSpace($LogFile) -and (Test-Path -LiteralPath $Lo
     } catch {
         Write-Warning "Unable to delete log file '$LogFile'. $($_.Exception.Message)"
     }
+}
+#
+# BEGIN DIMENSIONS
+#
+$Service_Start = @{
+    0 = "Boot"
+    1 = "System"
+    2 = "Automatic"
+    3 = "Manual"
+    4 = "Disabled"
+}
+#
+$Service_State = @{
+    1 = "Stopped"
+    2 = "StartPending"
+    3 = "StopPending"
+    4 = "Running"
+    5 = "ContinuePending"
+    6 = "PausePending"
+    7 = "Paused"
+}
+#
+$Enc_Conversion = @{
+    0 = "FullyDecrypted"
+    1 = "FullyEncrypted"
+    2 = "EncryptionInProgress"
+    3 = "DecryptionInProgress"
+    4 = "EncryptionPaused"
+    5 = "DecryptionPaused"
+}
+#
+$Enc_Method = @{
+    0 = "None"
+    1 = "AES_128_WITH_DIFFUSER"
+    2 = "AES_256_WITH_DIFFUSER"
+    3 = "AES_128"
+    4 = "AES_256"
+    5 = "HARDWARE_ENCRYPTION"
+    6 = "XTS_AES_128"
+    7 = "XTS_AES_256"
+}
+#
+$Enc_Protection = @{
+    0 = "Unprotected"
+    1 = "Protected"
+    2 = "Unknown"
+}
+#
+$Enc_Protector = @{
+    0  = "Unknown"
+    1  = "TPM"
+    2  = "External key"
+    3  = "Numerical password"
+    4  = "TPM and PIN"
+    5  = "TPM and Startup key"
+    6  = "TPM and PIN and Startup key"
+    7  = "Public key"
+    8  = "Passphrase"
+    9  = "TPM Certificate"
+    10 = "CNG protector"
 }
 #
 # BEGIN FUNCTIONS
@@ -234,23 +294,9 @@ if ($cert) {
         # Query the service
         $DefSvc = Get-Service -name WinDefend -ErrorAction Stop
         # Get the data we need to report
-        switch ([int]$DefSvc.Status) {
-            1 {$Defender_State = "Stopped"}
-            2 {$Defender_State = "StartPending"}
-            3 {$Defender_State = "StopPending"}
-            4 {$Defender_State = "Running"}
-            5 {$Defender_State = "ContinuePending"}
-            6 {$Defender_State = "PausePending"}
-            7 {$Defender_State = "Paused"}
-        }
+		$Defender_State=$Service_State[[int]$DefSvc.Status]
         # Get the data we need to report
-        switch ([int]$DefSvc.StartType) {
-            0 {$Defender_Start = "Boot"}
-            1 {$Defender_Start = "System"}
-            2 {$Defender_Start = "Automatic"}
-            3 {$Defender_Start = "Manual"}
-            4 {$Defender_Start = "Disabled"}
-        }
+		$Defender_Start=$Service_Start[[int]$DefSvc.StartType]
         # Log the success
         Write-Log -LogFile $LogFile -Message "Retrieved Defender service data"
     } catch {
@@ -288,23 +334,9 @@ if ($cert) {
         # Query the service
         $BitSvc = Get-Service -name BDESvc
         # Get the data we need to report
-        switch ([int]$BitSvc.Status) {
-            1 {$Bitlocker_State = "Stopped"}
-            2 {$Bitlocker_State = "StartPending"}
-            3 {$Bitlocker_State = "StopPending"}
-            4 {$Bitlocker_State = "Running"}
-            5 {$Bitlocker_State = "ContinuePending"}
-            6 {$Bitlocker_State = "PausePending"}
-            7 {$Bitlocker_State = "Paused"}
-        }
+		$Bitlocker_State=$Service_State[[int]$BitSvc.Status]
         # Get the data we need to report
-        switch ([int]$BitSvc.StartType) {
-            0 {$Bitlocker_Start = "Boot"}
-            1 {$Bitlocker_Start = "System"}
-            2 {$Bitlocker_Start = "Automatic"}
-            3 {$Bitlocker_Start = "Manual"}
-            4 {$Bitlocker_Start = "Disabled"}
-        }
+		$Bitlocker_Start=$Service_Start[[int]$BitSvc.StartType]
         # Log the success
         Write-Log -LogFile $LogFile -Message "Retrieved BitLocker service data"
     } catch {
@@ -321,60 +353,28 @@ if ($cert) {
         $BitEncrypted = $null
         foreach ($thisDrive in $BitWMI) {
             $DriveLetter = $thisDrive.DriveLetter
-            switch ([int]$thisDrive.GetConversionStatus) {
-                0 {$Status = "FullyDecrypted"}
-                1 {$Status = "FullyEncrypted"}
-                2 {$Status = "EncryptionInProgress"}
-                3 {$Status = "DecryptionInProgress"}
-                4 {$Status = "EncryptionPaused"}
-                5 {$Status = "DecryptionPaused"}
-            }        
+			$Status=$Enc_Conversion[[int]$thisDrive.GetConversionStatus]
             if ($BitEncrypted) {$BitEncrypted += ";$DriveLetter$Status"} else {$BitEncrypted = "$DriveLetter$Status"}        
         }
         # Encryption Algorithm for each drive
         $BitEncryption = $null
         foreach ($thisDrive in $BitWMI) {
             $DriveLetter = $thisDrive.DriveLetter
-            switch ([int]$thisDrive.GetProtectionStatus) {
-                0 {$Status = "None"}
-                1 {$Status = "AES_128_WITH_DIFFUSER"}
-                2 {$Status = "AES_256_WITH_DIFFUSER"}
-                3 {$Status = "AES_128"}
-                4 {$Status = "AES_256"}
-                5 {$Status = "HARDWARE_ENCRYPTION"}
-                6 {$Status = "XTS_AES_128"}
-                7 {$Status = "XTS_AES_256"}
-            }        
+			$Status=$Enc_Method[[int]$thisDrive.GetEncryptionMethod]
             if ($BitEncryption) {$BitEncryption += ";$DriveLetter$Status"} else {$BitEncryption = "$DriveLetter$Status"}        
         }
         # Protection status for each drive
         $BitProtected = $null
         foreach ($thisDrive in $BitWMI) {
             $DriveLetter = $thisDrive.DriveLetter
-            switch ([int]$thisDrive.GetProtectionStatus) {
-                0 {$Status = "Unprotected"}
-                1 {$Status = "Protected"}
-                2 {$Status = "Unknown"}
-            }        
+            $Status=$Enc_Protection[[int]$thisDrive.GetProtectionStatus]
             if ($BitProtected) {$BitProtected += ";$DriveLetter$Status"} else {$BitProtected = "$DriveLetter$Status"}        
         }
         # Protector for each drive
         $BitProtector = $null
         foreach ($thisDrive in $BitWMI) {
             $DriveLetter = $thisDrive.DriveLetter
-            switch ([int]$thisDrive.GetProtectionStatus) {
-                0 {$Status = "Unknown"}
-                1 {$Status = "TPM"}
-                2 {$Status = "External key"}
-                3 {$Status = "Numerical password"}
-                4 {$Status = "TPM and PIN"}
-                5 {$Status = "TPM and Startup key"}
-                6 {$Status = "TPM and PIN and Startup key"}
-                7 {$Status = "Public key"}
-                8 {$Status = "Passphrase"}
-                9 {$Status = "TPM Certificate"}
-                10 {$Status = "CNG protector"}
-            }        
+			$Status=$Enc_Protector[[int]$thisDrive.GetKeyProtectorType]
             if ($BitProtector) {$BitProtector += ";$DriveLetter$Status"} else {$BitProtector = "$DriveLetter$Status"}  
         }
         # Log the success
@@ -385,6 +385,14 @@ if ($cert) {
         # Clear the error
         $error.clear()
     }
+    #
+    # BuildDate
+    #
+    $BuildDate = (Get-CimInstance Win32_OperatingSystem).InstallDate.ToString("yyyy-MM-ddTHH:mm:ss")
+    #
+    # LastBootTime
+    #
+    $LastBootTime = (Get-CimInstance Win32_OperatingSystem).LastBootUpTime.ToString("yyyy-MM-ddTHH:mm:ss")
     #
     # Physical device Mac Addresses
     # Key Compliance Indicators:
@@ -428,22 +436,30 @@ if ($cert) {
     # Build inventory object as a proper PowerShell hashtable
     $Inventory = [ordered]@{
         ManagedDeviceName = $ManagedDeviceName
-        AzureADDeviceID   = $AzureADDeviceID
-        ManagedDeviceID   = $ManagedDeviceID
-        DefenderState     = $Defender_State
-        DefenderStart     = $Defender_Start
-        DefSpySigAge      = $Defender_SpySigAge
-        DefNisSigAge      = $Defender_NisSigAge
-        DefAVSigAge       = $Defender_AVSigAge
-        DefAMEngine       = $Defender_AMEngine
-        BitlockerState    = $Bitlocker_State
-        BitlockerStart    = $Bitlocker_Start
-        BitEncrypted      = $BitEncrypted
-        BitEncryption     = $BitEncryption
-        BitProtected      = $BitProtected
-        BitProtector      = $BitProtector
+        ManagedDeviceID = $ManagedDeviceID
+        DefenderState = $Defender_State
+        DefenderStart = $Defender_Start
+        DefSpySigAge = $Defender_SpySigAge
+        DefNisSigAge = $Defender_NisSigAge
+        DefAVSigAge = $Defender_AVSigAge
+        DefAMEngine = $Defender_AMEngine
+        BitlockerState = $Bitlocker_State
+        BitlockerStart = $Bitlocker_Start
+        BitEncrypted = $BitEncrypted
+        BitEncryption = $BitEncryption
+        BitProtected = $BitProtected
+        BitProtector = $BitProtector
+        XProtect_Version = ""
+		XProtect_Meta = ""
+		XProtect_Launch = ""
+		XProtect_Background = ""
+        FileVault_Status = ""
+		FileVault_UserToken = ""
+		FileVault_BootToken = ""
+        BuildDate = $BuildDate
+        LastBootTime = $LastBootTime
     }
-
+    #
     # Add MAC entries safely
     foreach ($key in ($NetHash.Keys | Sort-Object)) {
         $Inventory["MAC$key"] = $NetHash[$key]
@@ -465,13 +481,15 @@ if ($cert) {
     #
     #
     # UnComment for DEBUGGING
-    $Body
+    #$Body
+    #exit 0
+    #
     #
     # Get the auth token
     $bearerToken = Get-AuthTokenWithCert -TenantId $TenantID -ClientId $ApplicationID -CertThumbprint $thumbprint
     #
     # UnComment for DEBUGGING
-    $bearerToken
+    #$bearerToken
     #
     # Don't save the whole token to the log, just enough to know we got it
     $Message = "Token : " + $bearerToken.Substring(0, [Math]::Min(40, $bearerToken.Length))
