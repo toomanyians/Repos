@@ -17,3 +17,4 @@ Here is how I would do it.
 - **Output.json** — Used to configure the Log Analytics table and DCR. Sample data submission in JSON format.
 - **Inventory.log** — Sample log output of Custom_Inventory.ps1
 - **Output.json** — Sample json for Log Analytics table and DCR creation.
+- **JWT_Assertion.py** - Bash inline code to use, obtain a JWT assertion and pass it back to BASH

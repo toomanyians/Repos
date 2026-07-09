@@ -194,7 +194,7 @@ MANAGEDDEVICENAME=$(Hostname)
 #----------------------------
 # Detect Intune Device ID
 #----------------------------
-MANAGEDDEVICEID=$(plutil -p /Library/Managed\ Preferences/com.apple.security.acme.plist | awk '/"CN"/{getline; match($0,/"[^"]+"/); print substr($0,RSTART+1,RLENGTH-2)}')
+MANAGEDDEVICEID=$(security find-certificate -a | awk -F= '/issu/ && /MICROSOFT INTUNE MDM DEVICE CA/ {getline;print $2}' | sed "s/"//g'))
 #
 #----------------------------
 # Detect console user
