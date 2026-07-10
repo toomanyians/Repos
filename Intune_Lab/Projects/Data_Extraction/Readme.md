@@ -5,8 +5,8 @@ Often it makes sense to collect all the data from all three tenants, and this re
 For large infrastructures with prohibitive retention policies, Sharepoint is not an option, but it can be for smaller, less regulated environments.  
 I will be using a PostGres server as a Data Warehouse to serve up dashboards in Power BI and Excel reports in SharePoint.
 
-Stay tuned.... This is my next focus using Sharepoint (Lists and CSV) or PostGres... If I get really ambitious, I might add MSSQL...
-
+Stay tuned.... This is my next focus using Sharepoint (Lists and CSV) or PostGres... If I get really ambitious, I might add MSSQL...  
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/ian-b-01828112)
 ---
 
 ## Files

@@ -1,7 +1,7 @@
 # Introduction
 
-Documentation is the key. If you want the same results every time, do the same things in the same order.
-
+Documentation is the key. If you want the same results every time, do the same things in the same order.  
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/ian-b-01828112)
 ---
 
 ## Files
