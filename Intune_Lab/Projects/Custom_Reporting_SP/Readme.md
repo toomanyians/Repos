@@ -5,6 +5,7 @@ It was clear it needed to be extended and having experience with Configuration M
 The API for submitting JSON data to Log Analytics is changing and now requires authentication to a Service Principal.  
 Instead of using a Client Secret, I wanted to use a Client Certificate, but very few examples for this are available.  
 Here is how I would do it.  
+
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/ian-b-01828112)
 ---
 

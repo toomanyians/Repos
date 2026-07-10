@@ -4,8 +4,10 @@ The primary reason for this repository is that I cannot share code produced for 
 
 As a result, these projects provide real-world examples that demonstrate my skills and experience using my own data, tools, and business requirements.
 
-I hope sharing this knowledge is useful to others.
+I hope sharing this knowledge is useful to others.  
 
+## Connect with me
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/ian-b-01828112)
 ---
 
 ## Diabetes Project
