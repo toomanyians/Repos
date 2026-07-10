@@ -8,6 +8,7 @@ I will be using a PostGres server as a Data Warehouse to serve up dashboards in 
 Stay tuned.... This is my next focus using Sharepoint (Lists and CSV) or PostGres... If I get really ambitious, I might add MSSQL...  
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/ian-b-01828112)
+
 ---
 
 ## Files

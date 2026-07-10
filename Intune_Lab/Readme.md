@@ -4,8 +4,8 @@ This project focuses on submitting, collecting, processing, and analyzing data f
 
 As robust as Intune is, it still has reporting and inventory limitations. Extending Intune's functionality with compliance reporting is the focus of this lab.  
 
-## Connect with me
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/ian-b-01828112)
+
 ---
 
 ## Files

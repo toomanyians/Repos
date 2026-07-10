@@ -6,8 +6,8 @@ As a result, these projects provide real-world examples that demonstrate my skil
 
 I hope sharing this knowledge is useful to others.  
 
-## Connect with me
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/ian-b-01828112)
+
 ---
 
 ## Diabetes Project

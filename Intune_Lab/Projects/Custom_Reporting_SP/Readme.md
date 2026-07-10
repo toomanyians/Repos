@@ -7,6 +7,7 @@ Instead of using a Client Secret, I wanted to use a Client Certificate, but very
 Here is how I would do it.  
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=flat&logo=linkedin)](https://www.linkedin.com/in/ian-b-01828112)
+
 ---
 
 ## Files
