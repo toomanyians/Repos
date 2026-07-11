@@ -7,14 +7,14 @@ trap 'echo "ERROR: Command \"$BASH_COMMAND\" failed on line $LINENO"; exit 1' ER
 # CONFIGURATION
 ###############################################
 
-IDENTITY_NAME="<Certificate name to match>"
-TENANT_ID="<Your Tenant ID>"
-CLIENT_ID="<Your App registration Client ID>"
+IDENTITY_NAME="Data Collect"
+TENANT_ID="<Tenant ID>"
+CLIENT_ID="<Application ID>"
 
 # Log Analytics Data (for JSON submission)
 DCRIMMUTABLEID="<DCR Immutable ID>"
-DCEURI="<DCE Ingestion URL>"
-STREAMNAME="<Stream name>"
+DCEURI="<DCE URI>"
+STREAMNAME="<Stream Name>"
 
 ###############################################
 # BUILD CLIENT ASSERTION USING MACOS KEYCHAIN
@@ -194,7 +194,7 @@ MANAGEDDEVICENAME=$(Hostname)
 #----------------------------
 # Detect Intune Device ID
 #----------------------------
-MANAGEDDEVICEID=$(security find-certificate -a | awk -F= '/issu/ && /MICROSOFT INTUNE MDM DEVICE CA/ {getline;print $2}' | sed "s/"//g'))
+MANAGEDDEVICEID=$(security find-certificate -a | awk -F= '/issu/ && /MICROSOFT INTUNE MDM DEVICE CA/ {getline;print $2}' | sed 's/"//g')
 #
 #----------------------------
 # Detect console user
@@ -310,6 +310,7 @@ done < <(networksetup -listallhardwareports)
 # Ensure MAC0–MAC4 exist
 while [ "$i" -lt 5 ]; do
     declare "MAC$i"=""
+    (( i++ ))
 done
 #----------------------------
 # Build Date
@@ -325,42 +326,42 @@ LastBootTime=$(date -jf "%s" "$LastBoot" +"%m/%d/%Y, %I:%M:%S %p")
 #
 # DEBUGGING OUTPUT
 #
-echo "Current User"
-echo "---------------"
-echo "ManagedDeviceName: $MANAGEDDEVICENAME"
-echo "Intune ID: $MANAGEDDEVICEID"
-echo ""
-echo "Current User"
-echo "---------------"
-echo "Logged In User: $CURRENT_USER"
-echo ""
-echo "XProtect Status"
-echo "---------------"
-echo "XProtect Version: $XP_VERSION"
-echo "XProtect Meta Version: $XP_META"
-echo "XProtect Launch Scan: $XP_LAUNCH_SCAN"
-echo "XProtect Background Scan: $XP_BACKGROUND_SCAN"
-echo ""
-echo "FileVault Status"
-echo "---------------"
-echo "Data Volume Encryption: $FILEVAULT_STATUS"
-echo "Secure Token ($CURRENT_USER): $SECURE_TOKEN_STATUS"
-echo "Bootstrap Token: $BOOTSTRAP_TOKEN_STATUS"
-echo ""
-echo "System Details"
-echo "---------------"
-echo "Build Date: $BuildDate"
-echo "Last Boot: $LastBootTime"
-echo ""
-echo "MAC Addresses"
-echo "---------------"
-echo "MAC0: $MAC0"
-echo "MAC1: $MAC1"
-echo "MAC2: $MAC2"
-echo "MAC3: $MAC3"
-echo "MAC4: $MAC4"
+#echo "Current User"
+#echo "---------------"
+#echo "ManagedDeviceName: $MANAGEDDEVICENAME"
+#echo "Intune ID: $MANAGEDDEVICEID"
+#echo ""
+#echo "Current User"
+#echo "---------------"
+#echo "Logged In User: $CURRENT_USER"
+#echo ""
+#echo "XProtect Status"
+#echo "---------------"
+#echo "XProtect Version: $XP_VERSION"
+#echo "XProtect Meta Version: $XP_META"
+#echo "XProtect Launch Scan: $XP_LAUNCH_SCAN"
+#echo "XProtect Background Scan: $XP_BACKGROUND_SCAN"
+#echo ""
+#echo "FileVault Status"
+#echo "---------------"
+#echo "Data Volume Encryption: $FILEVAULT_STATUS"
+#echo "Secure Token ($CURRENT_USER): $SECURE_TOKEN_STATUS"
+#echo "Bootstrap Token: $BOOTSTRAP_TOKEN_STATUS"
+#echo ""
+#echo "System Details"
+#echo "---------------"
+#echo "Build Date: $BuildDate"
+#echo "Last Boot: $LastBootTime"
+#echo ""
+#echo "MAC Addresses"
+#echo "---------------"
+#echo "MAC0: $MAC0"
+#echo "MAC1: $MAC1"
+#echo "MAC2: $MAC2"
+#echo "MAC3: $MAC3"
+#echo "MAC4: $MAC4"
 #
-exit 0
+#exit 0
 #
 #----------------------------
 # Build json
@@ -429,10 +430,6 @@ jsonData=$(jq -n \
 )
 #
 #
-# Debugging
-echo "$jsonData"
-exit 0
-#
 #----------------------------
 # REQUEST TOKEN FROM AZURE AD
 #----------------------------
@@ -455,6 +452,7 @@ if [[ -z "$access_token" || "$access_token" == "null" ]]; then
 fi
 #
 # Debugging
+echo "$jsonData"
 echo "$access_token"
 exit 0
 #
