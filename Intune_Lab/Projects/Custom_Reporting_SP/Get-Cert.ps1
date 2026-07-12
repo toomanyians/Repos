@@ -1,8 +1,22 @@
 ﻿# -------------------------------
 # PARAMETERS FOR SELF-SIGNED CERT
 # -------------------------------
+$FriendlyName = "YOUR CERTIFICATE NAME"
+$MyPassword = "PASSWORD for PFX"
+$DNSName = "YOUR DOMAIN"
+#
+# Extended Key Usage - can be used to determine what this
+#  certificate is to be used for
+# Code Signing          1.3.6.1.5.5.7.3.3 
+# Client Authentication 1.3.6.1.5.5.7.3.2  
+# S/MIME (Email)        1.3.6.1.5.5.7.3.4
+# OCSP Signing          1.3.6.1.5.5.7.3.9
+#
+# Assign EKU's
+$eku = @("1.3.6.1.5.5.7.3.2")
+#
 $params = @{
-    Subject           = "CN=<Certificate name>"
+    Subject           = "CN=$FriendlyName"
     CertStoreLocation = "Cert:\CurrentUser\My"
     # Key settings (IMPORTANT)
     KeyAlgorithm      = "RSA"
@@ -12,14 +26,13 @@ $params = @{
     # CRITICAL FOR JWT / ENTRA ID
     KeyUsage          = @("DigitalSignature")
     TextExtension     = @(
-        "2.5.29.37={text}1.3.6.1.5.5.7.3.3"  # Code Signing EKU
+        "2.5.29.37={text}$($eku -join ',')"
     )
     # Certificate identity
-    DnsName           = "<Your DNS Name>"
+    DnsName           = $DNSName
     # Validity
     NotBefore         = (Get-Date).AddMinutes(-5)
     NotAfter          = (Get-Date).AddYears(2)
-    # Required for authentication
     HashAlgorithm     = "SHA256"
 }
 #
@@ -30,6 +43,7 @@ Write-Host "Certificate Generation begin."
 # -------------------------------
 $cert = New-SelfSignedCertificate @params
 $cert.FriendlyName = "Data Collect"
+#
 Write-Host ""
 Write-Host "Certificate Thumbprint:" $cert.Thumbprint
 Write-Host "Friendly Name:" $cert.FriendlyName
@@ -37,15 +51,14 @@ Write-Host "Subject:" $cert.Subject
 # -------------------------------
 # EXPORT PUBLIC CERT (.CER)
 # -------------------------------
-$cerPath = "$env:USERPROFILE\Documents\Data_Collect.cer"
+$cerPath = "$env:USERPROFILE\Documents\$FriendlyName.cer"
 Export-Certificate -Cert $cert -FilePath $cerPath | Out-Null
 # -------------------------------
 # EXPORT PRIVATE KEY (.PFX)
 # -------------------------------
-$MyPassword = "<Your password>"
 $mypwd = ConvertTo-SecureString -String $MyPassword -Force -AsPlainText
-$pfxPath = "$env:USERPROFILE\Documents\Data_Collect.pfx"
-Export-PfxCertificate -Cert $cert -FilePath $pfxPath -Password $mypwd -ChainOption BuildChain | Out-Null
+$pfxPath = "$env:USERPROFILE\Documents\$FriendlyName.pfx"
+Export-PfxCertificate -Cert $cert -FilePath $pfxPath -Password $mypwd -ChainOption EndEntityCertOnly | Out-Null
 # -------------------------------
 # RE-IMPORT PFX USING CAPI PROVIDER
 # -------------------------------
@@ -80,8 +93,7 @@ if ($privateKey -eq $null) {
     $keyPem = "-----BEGIN PRIVATE KEY-----`n" +
               [System.Convert]::ToBase64String($pkcs8, 'InsertLineBreaks') +
               "`n-----END PRIVATE KEY-----"
-
-    $pemKeyPath = "$env:USERPROFILE\Documents\Data_Collect.pem.key"
+    $pemKeyPath = "$env:USERPROFILE\Documents\$FriendlyName.pem.key"
     Set-Content -Path $pemKeyPath -Value $keyPem
 }
 # -------------------------------
@@ -90,8 +102,7 @@ if ($privateKey -eq $null) {
 $certPem = "-----BEGIN CERTIFICATE-----`n" +
            [System.Convert]::ToBase64String($cert.RawData, 'InsertLineBreaks') +
            "`n-----END CERTIFICATE-----"
-
-$pemCertPath = "$env:USERPROFILE\Documents\Data_Collect.pem.crt"
+$pemCertPath = "$env:USERPROFILE\Documents\$FriendlyName.pem.crt"
 Set-Content -Path $pemCertPath -Value $certPem
 # -------------------------------
 # REMOVE CERT FROM WINDOWS STORE
