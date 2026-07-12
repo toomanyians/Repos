@@ -35,7 +35,7 @@ Here is how I would do it.
 
 ## MacOS
 
-**MacOS_Custom_Inventory.sh** — MacOS Custom Compliance script using a Client Certificate to authenticate as a Service Principal.
+**MacOS_Custom_Inventory.sh** — MacOS Custom Compliance script using a Client Certificate to authenticate as a Service Principal.  
 Pending updates:
 
 - Update certificate location code to allow multiple subject matches
