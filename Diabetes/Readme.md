@@ -8,16 +8,25 @@ The monitoring data can be downloaded from the LibreView web app, providing me a
 
 ---
 
-## Files
+# Files
 
-### **./Diabetes/Data**
-- **MewBaxter_glucose.zip** — UTF‑8 encoded CSV file containing the latest snapshot of data  
-- **MewBaxter_glucose_2026-03-13.zip** — LibreView only retains data for 18 months; this is the first year's archive  
+## **/Documents**
 
-### **./Diabetes/Documents**
-- **Mew and Diabetes.pdf** — Documentation summarizing everything you need to know about cat diabetes and how to install and use the Power BI dashboard, including customization if you want to use it for your own cat  
+**Mew and Diabetes.pdf** — Documentation summarizing everything you need to know about cat diabetes and how to install and use the Power BI dashboard, including customization if you want to use it for your own cat  
 
-### **./Diabetes/Power BI**
-- **Mew Glucose.pbix** — The dashboard  
-  - Transforms are done in M‑Language to smooth the data  
-  - DAX is used for dimensioning (data normalization, lookup tables), etc.  
+## /Power BI
+
+**Mew Glucose.pbix** — The dashboard  
+
+- Transforms are done in M‑Language to smooth the data  
+- DAX is used for dimensioning (data normalization, lookup tables), etc.  
+
+## **/Data**
+
+**MewBaxter_glucose.zip** — UTF‑8 encoded CSV file containing the latest snapshot of data
+
+**MewBaxter_glucose_2026-03-13.zip** — LibreView only retains data for 18 months; this is the first year's archive
+
+<img src="file:///G:/My%20Drive/Mew%20Glucose/Mew.jpg" title="" alt="" width="402">
+
+**RIP Mew  July 3rd,2026**
