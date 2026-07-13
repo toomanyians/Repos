@@ -26,7 +26,3 @@ The monitoring data can be downloaded from the LibreView web app, providing me a
 **MewBaxter_glucose.zip** — UTF‑8 encoded CSV file containing the latest snapshot of data
 
 **MewBaxter_glucose_2026-03-13.zip** — LibreView only retains data for 18 months; this is the first year's archive
-
-<img src="file:///G:/My%20Drive/Mew%20Glucose/Mew.jpg" title="" alt="" width="402">
-
-**RIP Mew  July 3rd,2026**

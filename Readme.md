@@ -14,8 +14,7 @@ I hope sharing this knowledge is useful to others as well.
 
 ## Power BI
 
-**/Diabetes**
-This project focuses on using Power BI for data visualization.
+**/Diabetes** - This project focuses on using Power BI for data visualization.
 
 I monitor my cat's blood glucose levels and report them to a central tracking system. The collected data is used to identify trends that help guide insulin dosage adjustments and optimize treatment decisions.
 
@@ -27,6 +26,6 @@ REST API calls can come in many forms, with multiple issues and limitations. Thi
 
 ## Intune and Azure (MS Graph API, Log Analytics, etc)
 
-This project focuses on submitting, collecting, processing, and analyzing data from various Azure APIs.
+**/Intune_Lab** - This project focuses on submitting, collecting, processing, and analyzing data from various Azure APIs.
 
 As robust as Intune is, it still has reporting and inventory limitations. Extending Intune's functionality with compliance reporting is the focus of this lab.
