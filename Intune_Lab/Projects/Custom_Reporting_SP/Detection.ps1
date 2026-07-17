@@ -1,6 +1,16 @@
+# ------------------------------------------------------------
+#
+# Configuration
+#
+# ------------------------------------------------------------
 $Thumbprint = "<THUMBPRINT>"
-$Store = Get-ChildItem -Path Cert:\LocalMachine\My
-$Cert = $Store | Where-Object { $_.Thumbprint -eq $Thumbprint }
+# ------------------------------------------------------------
+# Locate the certificate by thumbprint
+# ------------------------------------------------------------
+$Cert = Get-ChildItem -Path Cert:\LocalMachine\My | Where-Object {$_.Thumbprint -eq $Thumbprint}
+# ------------------------------------------------------------
+# Delete it if found
+# ------------------------------------------------------------
 if ($Cert) {
     Write-Host "Detected"
     exit 0

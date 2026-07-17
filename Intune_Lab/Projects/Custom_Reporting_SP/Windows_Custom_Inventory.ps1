@@ -5,17 +5,17 @@
 Add-Type -AssemblyName System.Web
 #
 # Service Principal Data (Required for Token)
-$ApplicationID = "<Application client id>"
-$TenantID = "<Your tenant id>"
-$CertName = "<Certificate subject match string>"
+$ApplicationID = "<Application/Client ID>"
+$TenantID = "<Tenant ID>"
+$CertName = "Data_Collect"
 #
 # Log Analytics Data (for JSON submission)
 $DcrImmutableId = "<DCR Immutable ID>"
-$DceURI = "<DCE URI>"
-$streamName = "<Stream name>"
+$DceURI = "<DCE Data Ingestion URL>"
+$streamName = "<Stream Name from DCR JSON>"
 #
 # Script logging
-$LogFile = "<Full path to log file, or blank>"
+$LogFile = "<Log File Path>"
 #
 # If a log file has been specified and it already exists, delete it.
 if (-not [string]::IsNullOrWhiteSpace($LogFile) -and (Test-Path -LiteralPath $LogFile)) {
@@ -480,16 +480,15 @@ if ($cert) {
     # END INVENTORY
     #
     #
-    # UnComment for DEBUGGING
-    #$Body
-    #exit 0
     #
     #
     # Get the auth token
     $bearerToken = Get-AuthTokenWithCert -TenantId $TenantID -ClientId $ApplicationID -CertThumbprint $thumbprint
     #
     # UnComment for DEBUGGING
-    #$bearerToken
+    $Body
+    $bearerToken
+    exit 0
     #
     # Don't save the whole token to the log, just enough to know we got it
     $Message = "Token : " + $bearerToken.Substring(0, [Math]::Min(40, $bearerToken.Length))

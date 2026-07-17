@@ -1,54 +1,126 @@
 #!/bin/bash
 set -euo pipefail
-###############################################
-# Configuration
-###############################################
-PFX_FILE="$INSTALL_DIR/<PFX FILENAME>"
-CERT_THUMBPRINT="<THUMBPRINT>"
-PFX_PASSWORD="<PFX PASSWORD>"
+set -o errtrace
+#----------------------------------------------
 #
-INSTALL_DIR="/Library/Application Support/MyCompany"
-KEYCHAIN="/Library/Keychains/System.keychain"
-CERT_THUMBPRINT=$(echo "$CERT_THUMBPRINT" | tr '[:upper:]' '[:lower:]')
-###############################################
-# Functions
-###############################################
-cleanup()
-{
-    echo "Cleaning up temporary files..."
-    rm -f "$PFX_FILE" || true
+# Configuration
+#
+#----------------------------------------------
+# Just in case you want to customize this
+INSTALL_DIR="/Library/Application Support/Company"
+# Needed to detect if it is installed
+ROOT_THUMBPRINT="<ROOT THUMBPRINT>"
+# PRIVATE KEY CONFIG
+PFX_FILE="$INSTALL_DIR/<PFX FILENAME>"
+PFX_PASSWORD="<PFX PASSWORD>"
+PFX_THUMBPRINT="<PFX THUMBPRINT>"
+# LOG FILE
+LogFile="<FULL PATH AND LOG FILE NAME>"
+#----------------------------------------------
+# Logging initialization
+#----------------------------------------------
+# Delete the existing log if it exists
+[[ -n "$LogFile" && -f "$LogFile" ]] && rm -f "$LogFile" 2>/dev/null || true
+# Function to write to the log file for code brevity
+Write_Log() {
+    [[ -n "${1:-}" && -n "${2:-}" ]] || return
+    printf "%s\t%s\n" "$(date +"%Y-%m-%d %H:%M:%S")" "$2" >> "$1"
 }
-error_exit()
-{
-    echo "ERROR: $1"
+#----------------------------------------------
+# Trap functions - Error trapping and logging
+#----------------------------------------------
+# error_handler - Writes log info
+error_handler() {
+    local exit_code="$1"
+    local line_no="$2"
+    local cmd="$BASH_COMMAND"
+    Write_Log "$LogFile" "RUNTIME ERROR: Command '$cmd' failed at line $line_no with exit code $exit_code"
+    echo "ERROR: Command '$cmd' failed at line $line_no (exit $exit_code)" >&2
+    exit "$exit_code"
+}
+# cleanup - called with an error or normal termination
+cleanup() {
+    Write_Log "$LogFile" "Cleaning up temporary files..."
+    if [[ -n "${PFX_FILE:-}" && -f "$PFX_FILE" ]]; then
+        rm -f "$PFX_FILE" || true
+    fi
+}
+# error_exit - Log an error message and terminate
+error_exit() {
+    local message="$1"
+    Write_Log "$LogFile" "ERROR: $message"
+    echo "ERROR: $message" >&2
     exit 1
 }
+# Any error gets trapped and logged here
+trap 'error_handler $? $LINENO' ERR
+# Any exit causes a cleanup - deletion of the PFX file
 trap cleanup EXIT
-###############################################
-# Validate files exist
-###############################################
+#----------------------------------------------
+# Parameter Normalization and validation
+#----------------------------------------------
+# normalize - clears invalid values from the string and converts to lowercase. 
+normalize() {
+    printf "%s" "$1" | tr '[:upper:]' '[:lower:]'
+}
+# This must be the SYSTEM keychain
+KEYCHAIN="/Library/Keychains/System.keychain"
+# normalize the thumbprint of the trusted root certificate we want to find
+PFX_THUMBPRINT="$(normalize "$PFX_THUMBPRINT")"
+# If it is null or invalid, error out
+[[ -n "$PFX_THUMBPRINT" ]] || error_exit "PFX_THUMBPRINT is empty — cannot validate certificate"
+# normalize the thumbprint of the certificate we want to find
+ROOT_THUMBPRINT="$(normalize "$ROOT_THUMBPRINT")"
+# If it is null or invalid, error out
+[[ -n "$ROOT_THUMBPRINT" ]] || error_exit "ROOT_THUMBPRINT is empty — cannot validate certificate"
+Write_Log "$LogFile" "Normalization functions completed."
+#----------------------------------------------
+# Validate package contents
+#----------------------------------------------
+# If the the PFX file is not found, exit and retry
 echo "Checking package contents..."
-[[ -f "$PFX_FILE" ]]  || error_exit "PFX file not found"
-###############################################
+[[ -f "$PFX_FILE" ]] || error_exit "PFX file not found"
+Write_Log "$LogFile" "PFX File found: $PFX_FILE"
+#----------------------------------------------
+# Validate trusted root exists
+#----------------------------------------------
+echo "Validating trusted root certificate..."
+# Go find the specified root certificate
+ROOT_FOUND=$(security find-certificate -a -Z "$KEYCHAIN" \
+    | awk -F': ' '/SHA-1 / {print tolower($2)}' \
+    | tr -d ' ' \
+    | grep -F "$ROOT_THUMBPRINT" || true)
+# If it was not found, exit with an error
+[[ -n "$ROOT_FOUND" ]] || error_exit "Trusted root certificate not found (thumbprint: $ROOT_THUMBPRINT)"
+echo "Trusted root certificate validated."
+Write_Log "$LogFile" "Trusted root certificate validated: $ROOT_FOUND"
+#----------------------------------------------
 # Import PFX
-###############################################
-echo "Importing PFX..."
-security import "$PFX_FILE" -k "$KEYCHAIN" -P "$PFX_PASSWORD" -A || error_exit "PFX import failed"
-###############################################
+#----------------------------------------------
+security import "$PFX_FILE" -k "$KEYCHAIN" -P "$PFX_PASSWORD" -A  || error_exit "PFX import failed"
+echo "PFX Imported..."
+Write_Log "$LogFile" "PFX File imported: $PFX_FILE"
+#----------------------------------------------
 # Verify identity
-###############################################
-echo "Verifying identity..."
-IDENTITY_FOUND=$(security find-identity -v "$KEYCHAIN" | tr -d ' ' | tr '[:upper:]' '[:lower:]' | grep "$CERT_THUMBPRINT" || true)
-if [[ -z "$IDENTITY_FOUND" ]]; then
-    error_exit "Certificate/private key identity not found"
-fi
+#----------------------------------------------
+# Validate that the MacOS found the private key.. Properly chained...
+IDENTITY_FOUND=$(
+    security find-identity -v "$KEYCHAIN" |
+    tr '[:upper:]' '[:lower:]' |
+    grep -F "$PFX_THUMBPRINT" || true
+)
+# Exit if it was not found with an error
+[[ -n "$IDENTITY_FOUND" ]] || error_exit "Certificate/private key identity not found"
+Write_Log "$LogFile" "Identity verified."
 echo "Identity verified."
-###############################################
+#----------------------------------------------
 # Display installed identity
-###############################################
-echo
-echo "Installed identities:"
-security find-identity -v "$KEYCHAIN"
-echo
+#----------------------------------------------
+Identities=$(security find-identity -v "$KEYCHAIN")
+Message="Installed identities: $Identities"
+echo "$Message"
+Write_Log "$LogFile" "$Message"
+# End
 echo "Certificate deployment completed successfully."
+Write_Log "$LogFile" "Certificate deployment completed successfully."
 exit 0

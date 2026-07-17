@@ -1,19 +1,19 @@
-#!/bin/bash
-set -euo pipefail
-###############################################
+#----------------------------------------------
+#
 # Configuration
-###############################################
-CERT_THUMBPRINT="<THUMBPRINT>"
+#
+#----------------------------------------------
+# This must be the SYSTEM keychain
 KEYCHAIN="/Library/Keychains/System.keychain"
-###############################################
-# Normalize thumbprint
-###############################################
-CERT_THUMBPRINT=$(echo "$CERT_THUMBPRINT" | tr '[:upper:]' '[:lower:]')
-###############################################
+# PRIVATE KEY CONFIG
+THUMBPRINT="<PFX THUMBPRINT>"
+#----------------------------------------------
 # Detection
-###############################################
-IDENTITY_FOUND=$(security find-identity -v "$KEYCHAIN" | tr -d ' ' | tr '[:upper:]' '[:lower:]' | grep "$CERT_THUMBPRINT" || true)
-if [[ -n "$IDENTITY_FOUND" ]]; then
+#----------------------------------------------
+if security find-identity -v "$KEYCHAIN" \
+    | tr '[:upper:]' '[:lower:]' \
+    | grep -q "$THUMBPRINT"
+then
     echo "Certificate identity detected."
     exit 0
 else
