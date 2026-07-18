@@ -10,7 +10,7 @@ These are projects I have decided to take on in my own time to experiment and se
 
 # Projects
 
-## Custom Reporting SP (Service Principal)
+## Custom Reporting SP (Service Principal) - Closed.
 
 There are certain data points that Intune cannot, and probably never will be able to report. Its capabilities can be extended through the use of custom compliance scripts to return data back to some central point (Log Analytics, SQL, make a choice...).
 
@@ -18,7 +18,7 @@ This extended data need could be driven by delays in Intune reporting (hardware 
 
 This project uses a custom compliance script to submit JSON data to the Log Analytics Data Ingestion API V2.0. It requires the submitter to authenticate to a Service Principal (App Registration) and instead of using a client secret, I take the more secure route - a client certificate.
 
-## **Custom Reporting AF (Azure Function)**
+## **Custom Reporting AF (Azure Function) - Pending.**
 
 Recently, I have seen a move away from using Log Analytics and authenticated data submission to using Azure Functions.
 
@@ -26,7 +26,7 @@ I think Azure Functions have some promise, especially in a serverless microservi
 
 This will be my exploration into an alternative to my preferred, and I suspect, a more secure approach to data aquisition.
 
-## **Data_Extraction**
+## **Data_Extraction - In Progress**
 
 Intune presents data in a few ways, but when you have three environments and thousands of devices the report on, you still need a way to extract and transform the data to build meaningful metrics.
 
