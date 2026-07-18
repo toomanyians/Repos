@@ -1,0 +1,19 @@
+2026-07-08 15:10:15	Retrieved Intune data for: IanBaxter_Windows_6/19/2026_3:13 AM, <GUID>
+2026-07-08 15:10:15	Retrieved Azure data for: <INTUNE DEVICE ID>
+2026-07-08 15:10:15	Retrieved Defender service data
+2026-07-08 15:10:15	Retrieved Defender WMI data
+2026-07-08 15:10:15	Retrieved BitLocker service data
+2026-07-08 15:10:16	Retrieved Bitlocker WMI data
+2026-07-08 15:10:16	Retrieved NetworkAdapter WMI data
+2026-07-08 15:10:16	Token : eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1
+2026-07-08 15:10:16	Uploading inventory...
+2026-07-08 15:10:16	URI: <DCE Ingestion URL>
+2026-07-08 15:10:16	Body Length: 1129 bytes
+2026-07-08 15:10:17	HTTP Status: 204
+2026-07-08 15:10:17	Status Description: No Content
+2026-07-08 15:10:17	Header: Strict-Transport-Security = max-age=31536000; includeSubDomains; preload
+2026-07-08 15:10:17	Header: x-ms-request-id = 4caa7683-6ce1-4e9a-bbbe-9ef9d895c43b
+2026-07-08 15:10:17	Header: X-Content-Type-Options = nosniff
+2026-07-08 15:10:17	Header: Date = Wed, 08 Jul 2026 21:10:16 GMT
+2026-07-08 15:10:17	Header: Server = Microsoft-HTTPAPI/2.0
+2026-07-08 15:10:17	Response Body: <empty>

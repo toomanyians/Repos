@@ -31,16 +31,13 @@ Here is how I would do it.
 
 **Detection.ps1** — Powershell script to detect if the private key is installed.
 
-**Inventory.log** — Sample log output of Windows_Custom_Inventory.ps1
+**Windows_Custom_Inventory.log** — Sample log output of Windows_Custom_Inventory.ps1
 
 ## MacOS
 
-**MacOS_Custom_Inventory.sh** — MacOS Custom Compliance script using a Client Certificate to authenticate as a Service Principal.  
-Pending updates:
+**MacOS_Custom_Inventory.sh** — MacOS Custom Compliance script using a Client Certificate to authenticate as a Service Principal.
 
-- Update certificate location code to allow multiple subject matches
-
-- Add logging for remote log retrieval and analysis.
+**MacOS_Custom_Inventory.log** — Sample log output of Windows_Custom_Inventory.ps1
 
 **Build_PKG.sh** - Bash script to automate package (.pkg) creation for bulk depployment of the private key.
 

@@ -486,9 +486,9 @@ if ($cert) {
     $bearerToken = Get-AuthTokenWithCert -TenantId $TenantID -ClientId $ApplicationID -CertThumbprint $thumbprint
     #
     # UnComment for DEBUGGING
-    $Body
-    $bearerToken
-    exit 0
+    #$Body
+    #$bearerToken
+    #exit 0
     #
     # Don't save the whole token to the log, just enough to know we got it
     $Message = "Token : " + $bearerToken.Substring(0, [Math]::Min(40, $bearerToken.Length))
@@ -545,12 +545,14 @@ if ($cert) {
         Write-Log -LogFile $LogFile -Message $_.Exception.Message
         # This will be returned to the console
         $OutputMessage += "DeviceInventory:Failed ($status)"
+        exit 1
     }
 } else {
     # Report back status
     $date = Get-Date -Format "dd-MM HH:mm"
     $OutputMessage = "InventoryDate:$date "
     $OutputMessage += "DeviceInventory:Fail No certificate."
+    exit 1
 }
 Write-Output $OutputMessage
-Exit 0
+exit 0

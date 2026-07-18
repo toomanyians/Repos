@@ -1,0 +1,44 @@
+2026-07-18 13:21:49	ManagedDeviceName: Ians-MacBook-Pro.local
+2026-07-18 13:21:49	ManagedDeviceId: 566c138c-e0d6-4b84-a2d7-0ee6eb9afd7c
+2026-07-18 13:21:49	Current User: root
+2026-07-18 13:21:50	XProtect Version: 5351
+2026-07-18 13:21:50	XProtect Meta Version: 5351
+2026-07-18 13:21:50	XProtect launch scan: enabled
+2026-07-18 13:21:50	XProtect background scan: enabled
+2026-07-18 13:21:50	FileVault: Macintosh HD - Data;Not Encrypted
+2026-07-18 13:21:50	Secure Token Status: No console user
+2026-07-18 13:21:50	Bootstrap Token Status: Escrowed
+2026-07-18 13:21:50	MAC Addresses enumerated.
+2026-07-18 13:21:50	Build Date: 07/02/2026, 12:56:49 PM
+2026-07-18 13:21:50	Last Boot Time: 07/18/2026, 06:39:59 AM
+2026-07-18 13:21:50	JSON: {
+  "ManagedDeviceName": "Ians-MacBook-Pro.local",
+  "ManagedDeviceID": "566c138c-e0d6-4b84-a2d7-0ee6eb9afd7c",
+  "DefenderState": "",
+  "DefenderStart": "",
+  "DefSpySigAge": "",
+  "DefNisSigAge": "",
+  "DefAVSigAge": "",
+  "DefAMEngine": "",
+  "BitlockerState": "",
+  "BitlockerStart": "",
+  "BitEncrypted": "",
+  "BitEncryption": "",
+  "BitProtected": "",
+  "BitProtector": "",
+  "XProtect_Version": "5351",
+  "XProtect_Meta": "5351",
+  "XProtect_Launch": "enabled",
+  "XProtect_Background": "enabled",
+  "FileVault_Status": "Macintosh HD - Data;Not Encrypted",
+  "FileVault_UserToken": "No console user",
+  "FileVault_BootToken": "Escrowed",
+  "BuildDate": "07/02/2026, 12:56:49 PM",
+  "LastBootTime": "07/18/2026, 06:39:59 AM",
+  "MAC0": "Thunderbolt Bridge|12:50:5b:5b:e6:c1",
+  "MAC1": "Wi-Fi|90:9c:4a:b7:7e:e4",
+  "MAC2": "Thunderbolt 1|12:50:5b:5b:e6:c1",
+  "MAC3": "Thunderbolt 2|12:50:5b:5b:e6:c0",
+  "MAC4": "Thunderbolt 3|12:50:5b:5b:e6:c5"
+}
+2026-07-18 13:21:51	Http Code: 204
