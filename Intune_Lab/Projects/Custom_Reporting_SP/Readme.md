@@ -37,15 +37,15 @@ Here is how I would do it.
 
 **MacOS_Custom_Inventory.sh** — MacOS Custom Compliance script using a Client Certificate to authenticate as a Service Principal.
 
-**MacOS_Custom_Inventory.log** — Sample log output of Windows_Custom_Inventory.ps1
+**MacOS_Custom_Inventory.log** — Sample log output of MacOS_Custom_Inventory.sh
 
-**Build_PKG.sh** - Bash script to automate package (.pkg) creation for bulk depployment of the private key.
+**Build_PKG.sh** - Bash script to automate package (.pkg) creation for bulk deployment of the private key as a "MacOS app (PKG)" format.
 
 **postinstall** - Bash script embedded in the package to install and remove the private key file after installation.
 
-**Uninstall.sh** - Bash script for removing the public-private key pair.
+**Uninstall.sh** - Bash script for removing the public-private key pair of the client certificate..
 
-**Detect.sh** - Bash script to properly report the installation status of the private key.
+**Detect.sh** - Bash script to properly report the installation status of the client certificate.
 
 **JWT_Assertion.py** - Python code to use inline with Bash to obtain a JWT assertion and pass it back to Bash. Uses a substring match and the certificate validity period to determine which certificate to use.
 
