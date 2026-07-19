@@ -37,3 +37,7 @@ Documentation and code examples for EntraID and Intune using Graph API, Graph AP
 ## /Python
 
 Documentation and code examples for EntraID and Intune using Graph API, Graph API reports and Log Analytics. specific to Python.
+
+## /PostGres
+
+What you need to know to install and maintain a PostGres server to ingest the data, perform SQL based ETL processes and provide the data in a meaningful form.
