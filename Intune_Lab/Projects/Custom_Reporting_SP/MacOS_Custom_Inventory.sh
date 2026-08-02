@@ -351,8 +351,7 @@ Write_Log "$LogFile" "ManagedDeviceName: $MANAGEDDEVICENAME"
 #----------------------------
 # Detect Intune Device ID
 #----------------------------
-MANAGEDDEVICEID=$(
-security find-certificate -a |
+MANAGEDDEVICEID=$(security find-certificate -a -Z /Library/Keychains/System.keychain |
 awk -F= '/issu/ && /MICROSOFT INTUNE MDM DEVICE CA/ {getline; print $2}' |
 tr -d '"' |
 sort -u
